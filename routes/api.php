@@ -2,7 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\RoleController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -16,4 +17,26 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+
+Route::post('register', [AuthController::class, 'register']);
+
+Route::get('users/roles', [AuthController::class, 'getRole']);
+
+Route::get('roles', [RoleController::class, 'index']);
+Route::post('roles', [RoleController::class, 'create']);
+Route::put('roles/{role}', [RoleController::class, 'update']);
+Route::post('login', [AuthController::class, 'login']);
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('user/data', [AuthController::class, 'get_logged_user_data']);
+
+    // Ruta de registro de administrador de dominios
+    Route::post('register/admin/condo', [AuthController::class, 'register_admin_de_condominios']);
+    // Ruta de registro de cliente
+    Route::post('register/client', [AuthController::class, 'register']);
+    // Cerrar sesion
+    Route::get('logout', [AuthController::class, 'logout']);
+    // Roles
 });
