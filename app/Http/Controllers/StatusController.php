@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Status;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+
 
 class StatusController extends Controller
 {
@@ -15,6 +17,7 @@ class StatusController extends Controller
     public function index()
     {
         //
+        return Status::all();
     }
 
     /**
@@ -22,9 +25,20 @@ class StatusController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
         //
+        $validator = Validator::make($request->all(), [
+            'description' => 'required|string|max:255|unique:status',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['status' => false, 'errors' => $validator->errors()], 400);
+        }
+        $status = Status::create([
+            'description' => $request->description,
+        ]);
+        return response()->json(['message' => 'Status creado exitosamente', 'data' => $status, 'status' => true]);
     }
 
     /**
@@ -70,6 +84,17 @@ class StatusController extends Controller
     public function update(Request $request, Status $status)
     {
         //
+        $data = $request->all();
+        $validator = Validator::make($request->all(), [
+            'description' => 'required|string|max:255|unique:roles,description,' . $status->id,
+        ]);
+        if ($validator->fails()) {
+            $errors = $validator->errors();
+            return response()->json(['message' => 'No se logro actualizar', 'errors' => $validator->errors()]);
+        }
+        $status->description = $data['description'];
+        $status->save();
+        return response()->json(['message' => 'El rol se ha actualizado', 'data' => $status, 'status' => true], 200);
     }
 
     /**

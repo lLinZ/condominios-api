@@ -140,14 +140,6 @@ class AuthController extends Controller
     }
 
     /**
-     * Obtener usuarios por roles
-     */
-    public function getRole(User $user)
-    {
-        return response()->json(["users" => $user->roleById()], 200);
-    }
-
-    /**
      * Cerrar sesion
      */
     public function logout()

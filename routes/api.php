@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\StatusController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -19,15 +20,16 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-
+Route::post('login', [AuthController::class, 'login']);
 Route::post('register', [AuthController::class, 'register']);
 
-Route::get('users/roles', [AuthController::class, 'getRole']);
+Route::get('status', [StatusController::class, 'index']);
+Route::post('status', [StatusController::class, 'create']);
+Route::put('status/{status}', [StatusController::class, 'update']);
 
 Route::get('roles', [RoleController::class, 'index']);
 Route::post('roles', [RoleController::class, 'create']);
 Route::put('roles/{role}', [RoleController::class, 'update']);
-Route::post('login', [AuthController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('user/data', [AuthController::class, 'get_logged_user_data']);
