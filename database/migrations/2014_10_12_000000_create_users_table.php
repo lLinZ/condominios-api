@@ -20,14 +20,15 @@ return new class extends Migration
             $table->string('apellido');
             $table->string('segundo_apellido')->nullable();
             $table->string('telefono');
+            $table->string('color');
             $table->string('email')->unique();
             $table->string('cedula')->unique();
             $table->unsignedBigInteger('role_id')->nullable();
             $table->foreign('role_id')->references('id')->on('roles')->onUpdate('cascade')->onDelete('cascade');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->unsignedBigInteger('status')->nullable();
-            $table->foreign('status')->references('id')->on('statuses')->onUpdate('cascade')->onDelete('cascade');
+            $table->unsignedBigInteger('status_id')->nullable();
+            $table->foreign('status_id')->references('id')->on('statuses')->onUpdate('cascade')->onDelete('cascade');
             $table->rememberToken();
             $table->timestamps();
         });

@@ -41,6 +41,7 @@ class User extends Authenticatable
         'email',
         'cedula',
         'password',
+        'color',
     ];
 
     /**

@@ -33,6 +33,8 @@ Route::put('roles/{role}', [RoleController::class, 'update']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('user/data', [AuthController::class, 'get_logged_user_data']);
+    Route::put('user/edit/{user}', [AuthController::class, 'edit_user']);
+    Route::put('user/edit/{user}/color', [AuthController::class, 'edit_color']);
 
     // Ruta de registro de administrador de dominios
     Route::post('register/admin/condo', [AuthController::class, 'register_admin_de_condominios']);
