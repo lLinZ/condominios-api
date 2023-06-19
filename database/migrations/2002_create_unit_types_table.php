@@ -13,13 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('units', function (Blueprint $table) {
+        Schema::create('unit_types', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->unsignedBigInteger('user_id')->nullable();
-            $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
-            $table->unsignedBigInteger('unit_type_id')->nullable();
-            $table->foreign('unit_type_id')->references('id')->on('unit_types')->onUpdate('cascade')->onDelete('cascade');
+            $table->string('description');
+            $table->decimal('aliquot', 11, 2);
+            $table->decimal('size', 11, 2);
             $table->unsignedBigInteger('building_id')->nullable();
             $table->foreign('building_id')->references('id')->on('buildings')->onUpdate('cascade')->onDelete('cascade');
             $table->unsignedBigInteger('status_id')->nullable();
@@ -35,6 +33,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('units');
+        Schema::dropIfExists('unit_types');
     }
 };

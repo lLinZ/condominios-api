@@ -15,10 +15,11 @@ return new class extends Migration
     {
         Schema::create('buildings', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre');
-            $table->string('pisos');
-            $table->string('unidades');
-            $table->string('status');
+            $table->string('name');
+            $table->integer('floor_qty');
+            $table->integer('units_qty');
+            $table->unsignedBigInteger('status_id')->nullable();
+            $table->foreign('status_id')->references('id')->on('statuses')->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
         });
     }

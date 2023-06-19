@@ -15,8 +15,12 @@ return new class extends Migration
     {
         Schema::create('condominia', function (Blueprint $table) {
             $table->id();
+            $table->date('date');
+            $table->string('description');
             $table->unsignedBigInteger('building_id')->nullable();
             $table->foreign('building_id')->references('id')->on('buildings')->onUpdate('cascade')->onDelete('cascade');
+            $table->unsignedBigInteger('status_id')->nullable();
+            $table->foreign('status_id')->references('id')->on('statuses')->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
         });
     }

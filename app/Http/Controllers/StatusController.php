@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Payment;
 use App\Models\Status;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -9,6 +10,13 @@ use Illuminate\Support\Facades\Validator;
 
 class StatusController extends Controller
 {
+
+
+    public function payment()
+    {
+        //
+        return $this->hasMany(Payment::class, 'status_id');
+    }
     /**
      * Display a listing of the resource.
      *
