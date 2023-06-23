@@ -6,6 +6,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\StatusController;
+use App\Http\Controllers\UnitController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -36,6 +38,9 @@ Route::put('roles/{role}', [RoleController::class, 'update']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('payment', [PaymentController::class, 'create']);
     Route::get('payment', [PaymentController::class, 'index']);
+
+    Route::get('user/units', [UnitController::class, 'get_units']);
+
     Route::get('user/data', [AuthController::class, 'get_logged_user_data']);
     Route::put('user/edit/{user}', [AuthController::class, 'edit_user']);
     Route::put('user/edit/{user}/color', [AuthController::class, 'edit_color']);

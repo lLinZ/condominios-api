@@ -16,6 +16,18 @@ class UnitController extends Controller
     {
         //
     }
+    /**
+     * Display a listing of the resource corresponding to the logged user.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function get_units(Request $request)
+    {
+        //
+        $user = $request->user();
+        $units = Unit::where(['user_id' => $user->id])->get();
+        return response()->json(['status' => true, 'data' => $units, 'user' => $user]);
+    }
 
     /**
      * Show the form for creating a new resource.

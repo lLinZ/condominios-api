@@ -3,10 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Models\Building;
+use App\Models\Status;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class BuildingController extends Controller
 {
+
+
+
+
     /**
      * Display a listing of the resource.
      *
@@ -22,9 +28,31 @@ class BuildingController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
         //
+        $validation = Validator::make($request->all(), [
+            'name' => 'required|string|unique:buildings',
+            'unit_qty' => 'required|numeric',
+            'floor_qty' => 'required|numeric',
+        ]);
+
+        if ($validation->fails()) {
+            return response()->json(['status' => false, 'message' => $validation->errors()]);
+        }
+
+        $building = Building::create([
+            'name' => $request->name,
+            'unit_qty' => $request->unit_qty,
+            'floor_qty' => $request->floor_qty,
+        ]);
+
+        $status = Status::where(['description' => 'Activo'])->first();
+
+        $building->status()->associate($status);
+        $building->save();
+
+        return response()->json(['status' => true, 'message' => 'Edificio registrado', 'data' => $building]);
     }
 
     /**

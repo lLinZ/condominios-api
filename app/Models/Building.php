@@ -8,4 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class Building extends Model
 {
     use HasFactory;
+    public function status()
+    {
+        return $this->belongsTo(Status::class);
+    }
+    protected $fillable = [
+        'name',
+        'floor_qty',
+        'units_qty',
+    ];
 }
