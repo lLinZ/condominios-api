@@ -39,18 +39,30 @@ class PaymentController extends Controller
             $path = public_path('payment');
             $image->move($path, $image_name);
         } else {
-            return response()->json(['message' => 'La imagen es obligatoria'], 400);
+            return response()->json(['status' => false, 'message' => 'La imagen es obligatoria'], 400);
         }
 
         $currencies = ['Dolares', 'Bolivares'];
         $payment_types = ['Efectivo', 'Transferencia'];
 
-        $validator = Validator::make($request->all(), [
-            'currency' => 'required|in:' . implode(',', $currencies),
-            'payment_type' => 'required|in:' . implode(',', $payment_types),
-            'amount' => 'required|decimal:2',
-            'description' => 'string|max:255',
-        ]);
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'currency' => 'required|in:' . implode(',', $currencies),
+                'payment_type' => 'required|in:' . implode(',', $payment_types),
+                'amount' => 'required|decimal:2',
+                'description' => 'string|max:255',
+            ],
+            [
+                'currency.required' => 'El tipo de moneda es obligatorio',
+                'currency.in' => 'Moneda invalida',
+                'payment_type.required' => 'El tipo de pago es obligatorio',
+                'payment_type.in' => 'Tipo de pago invalido',
+                'amount.required' => 'El monto es obligatorio',
+                'amount.decimal' => 'Monto invalido',
+                'description.max' => 'La descripcion debe ser maximo 255 caracteres'
+            ]
+        );
 
         if ($validator->fails()) {
             return response()->json(['status' => false, 'message' => 'Error de validacion', 'errors' => $validator->errors()], 400);
@@ -63,7 +75,7 @@ class PaymentController extends Controller
             'description' => $request->description,
             'image' => 'payment/' . $image_name,
         ]);
-        $status = Status::firstOrNew(['description' => 'Activo']);
+        $status = Status::firstOrNew(['description' => 'Pendiente']);
         $status->save();
         $user_logged = $request->user();
         $payment->user()->associate($user_logged);
