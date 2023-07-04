@@ -10,12 +10,21 @@ class Unit extends Model
     use HasFactory;
     public function unit_type()
     {
-        $this->belongsTo(UnitType::class);
+        return $this->belongsTo(UnitType::class);
     }
     public function building()
     {
-        $this->belongsTo(Building::class);
+        return $this->belongsTo(Building::class);
     }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+    public function status()
+    {
+        return $this->belongsTo(Status::class);
+    }
+
 
     /**
      * The attributes that are mass assignable.
@@ -23,6 +32,6 @@ class Unit extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'nombre',
+        'name',
     ];
 }

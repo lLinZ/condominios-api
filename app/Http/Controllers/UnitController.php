@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Building;
 use App\Models\Unit;
 use Illuminate\Http\Request;
 
@@ -28,7 +29,16 @@ class UnitController extends Controller
         $units = Unit::where(['user_id' => $user->id])->get();
         return response()->json(['status' => true, 'data' => $units, 'user' => $user]);
     }
+    public function get_units_by_building(Request $request, Building $building)
+    {
 
+        $units = Unit::where(['building_id' => $building->id])->get();
+        $units->unit_type();
+        $units->user();
+        $units->building();
+        $units->status();
+        return response()->json(['status' => true, 'data' => $units]);
+    }
     /**
      * Show the form for creating a new resource.
      *

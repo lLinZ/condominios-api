@@ -12,6 +12,14 @@ class Building extends Model
     {
         return $this->belongsTo(Status::class);
     }
+    public function units()
+    {
+        return $this->hasMany(Unit::class, 'building_id', 'id');
+    }
+    public function unit_types()
+    {
+        return $this->hasMany(UnitType::class, 'building_id', 'id');
+    }
     protected $fillable = [
         'name',
         'floor_qty',

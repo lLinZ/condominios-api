@@ -15,7 +15,22 @@ class PaymentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
+    {
+        //
+        $user = $request->user();
+        $pagos = Payment::whereHas('status', function ($query) {
+            $query->where('description', 'Activo');
+        })->where('user_id', $user->id)->get();
+
+        return $pagos;
+    }
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getAll()
     {
         //
         $pagos = Payment::whereHas('status', function ($query) {
