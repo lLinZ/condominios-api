@@ -13,18 +13,20 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('no_common_expenses', function (Blueprint $table) {
+        Schema::create('debts', function (Blueprint $table) {
             $table->id();
             $table->string('description');
-            $table->decimal('amount', 11, 2);
-            $table->unsignedBigInteger('provider_id')->nullable();
-            $table->foreign('provider_id')->references('id')->on('providers')->onUpdate('cascade')->onDelete('cascade');
+            $table->decimal('common_expenses', 11, 2);
+            $table->decimal('no_common_expenses', 11, 2);
+            $table->decimal('total_debt', 11, 2);
+            $table->decimal('calculable_amount', 11, 2);
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
             $table->unsignedBigInteger('unit_id')->nullable();
             $table->foreign('unit_id')->references('id')->on('units')->onUpdate('cascade')->onDelete('cascade');
             $table->unsignedBigInteger('status_id')->nullable();
             $table->foreign('status_id')->references('id')->on('statuses')->onUpdate('cascade')->onDelete('cascade');
-            $table->unsignedBigInteger('condominium_id')->nullable();
-            $table->foreign('condominium_id')->references('id')->on('condominia')->onUpdate('cascade')->onDelete('cascade');
+
             $table->timestamps();
         });
     }
@@ -36,6 +38,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('no_common_expenses');
+        Schema::dropIfExists('debts');
     }
 };

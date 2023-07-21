@@ -25,6 +25,33 @@ class PaymentController extends Controller
 
         return $pagos;
     }
+
+    public function approve(Payment $payment)
+    {
+        if (!$payment) {
+            return response()->json(['status' => false, 'errors' => 'No existe el pago'], 400);
+        }
+        $active_status = Status::firstOrNew(['description' => 'Activo']);
+        $payment->status()->associate($active_status);
+        return response()->json(['status' => true, 'data' => $payment], 200);
+    }
+    public function decline(Payment $payment)
+    {
+        if (!$payment) {
+            return response()->json(['status' => false, 'errors' => 'No existe el pago'], 400);
+        }
+        $active_status = Status::firstOrNew(['description' => 'Inactivo']);
+        $payment->status()->associate($active_status);
+        return response()->json(['status' => true, 'data' => $payment], 200);
+    }
+
+    public function get_pending_payments()
+    {
+        $payments = Payment::with('status')->whereHas('status', function ($query) {
+            $query->where('description', 'Pendiente');
+        })->get();
+        return response()->json(['status' => true, 'data' => $payments]);
+    }
     /**
      * Display a listing of the resource.
      *

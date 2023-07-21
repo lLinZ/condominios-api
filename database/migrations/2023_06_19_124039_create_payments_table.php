@@ -17,7 +17,8 @@ return new class extends Migration
             $table->id();
             $table->string('currency');
             $table->string('payment_type');
-            $table->string('amount');
+            $table->decimal('amount', 11, 2);
+            $table->decimal('calculable_amount', 11, 2);
             $table->string('description')->nullable();
             $table->string('image')->nullable();
             $table->unsignedBigInteger('user_id')->nullable();

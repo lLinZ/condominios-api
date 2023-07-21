@@ -13,6 +13,17 @@ use Illuminate\Support\Facades\Validator;
 class AuthController extends Controller
 {
 
+    public function get_all_users(Request $request)
+    {
+
+        $users = User::with('role')->whereHas('status', function ($query) {
+            $query->where('description', 'Activo');
+        })->whereHas('role', function ($query) {
+            $query->where('description', 'Cliente');
+        })->get();
+
+        return response()->json(['status' => true, 'data' => $users]);
+    }
     public function get_logged_user_data(Request $request)
     {
 
@@ -128,6 +139,57 @@ class AuthController extends Controller
 
         // Obtener rol cliente o crear rol si no existe
         $role = Role::firstOrNew(['description' => 'Administrador de Condominios']);
+        $role->save();
+        // Se asocia el rol al usuario
+        $user->role()->associate($role);
+
+        // Se guarda el usuario
+        $user->save();
+
+        // Token de auth
+        $token = $user->createToken("auth_token")->plainTextToken;
+
+        return response()->json(['data' => $user, 'token' => $token, 'token_type' => 'Bearer', 'status' => true]);
+    }
+    /**
+     * Registrar administrador de condominios
+     */
+    public function register_master(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'nombre' => 'required|string|max:255',
+            'segundo_nombre' => 'string|max:255',
+            'apellido' => 'required|string|max:255',
+            'segundo_apellido' => 'string|max:255',
+            'telefono' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'cedula' => 'required|string|max:20|unique:users',
+            'password' => 'required|string|min:8',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['status' => false, 'errors' => $validator->errors()], 400);
+        }
+
+        $user = User::create([
+            'nombre' => $request->nombre,
+            'segundo_nombre' => $request->segundo_nombre,
+            'apellido' => $request->apellido,
+            'segundo_apellido' => $request->segundo_apellido,
+            'telefono' => $request->telefono,
+            'email' => $request->email,
+            'cedula' => $request->cedula,
+            'password' => Hash::make($request->password),
+            'color' => '#4caf50',
+        ]);
+        // Obtener status activo o crear status si no existe
+        $status = Status::firstOrNew(['description' => 'Activo']);
+        $status->save();
+        // Se asocia el status al usuario
+        $user->status()->associate($status);
+
+        // Obtener rol cliente o crear rol si no existe
+        $role = Role::firstOrNew(['description' => 'Master']);
         $role->save();
         // Se asocia el rol al usuario
         $user->role()->associate($role);
