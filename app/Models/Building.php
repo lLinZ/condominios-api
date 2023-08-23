@@ -14,7 +14,7 @@ class Building extends Model
     }
     public function units()
     {
-        return $this->hasMany(Unit::class, 'building_id', 'id');
+        return $this->hasMany(Unit::class);
     }
     public function unit_types()
     {

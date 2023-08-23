@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Provider;
+use App\Models\Status;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class ProviderController extends Controller
 {
@@ -15,6 +17,14 @@ class ProviderController extends Controller
     public function index()
     {
         //
+        $providers = Provider::whereHas('status', function ($query) {
+            $query->where('description', 'Activo');
+        })->get();
+        if (isset($providers)) {
+            return response()->json(['status' => true, 'data' => $providers], 200);
+        } else {
+            return response()->json(['status' => false, 'errors' => ['No se encontraron proveedores']], 400);
+        }
     }
 
     /**
@@ -22,9 +32,35 @@ class ProviderController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
         //
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string',
+            'rif' => 'required|string',
+        ], [
+            'name.required' => 'El nombre es obligatorio',
+            'name.string' => 'Nombre invalido',
+            'rif.required' => 'El rif es obligatorio',
+            'rif.string' => 'Rif invalido',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['status' => false, 'errors' => $validator->errors()], 400);
+        }
+
+        try {
+            $provider = Provider::create([
+                'name' => $request->name,
+                'rif' => $request->rif,
+            ]);
+            $status = Status::firstOrNew(['description' => 'Activo']);
+            $provider->status()->associate($status);
+            $provider->save();
+            return response()->json(['status' => true, 'message' => 'Se ha creado el proveedor', 'data' => $provider], 200);
+        } catch (\Throwable $th) {
+            return response()->json(['status' => false, 'errors' => ['No se logro crear el proveedor']], 400);
+        }
     }
 
     /**

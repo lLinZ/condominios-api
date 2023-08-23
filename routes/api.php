@@ -3,14 +3,17 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\BuildingController;
-use App\Http\Controllers\CondominiumController;
-use App\Http\Controllers\CurrencyController;
-use App\Http\Controllers\UnitTypeController;
-use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\UnitController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\StatusController;
-use App\Http\Controllers\UnitController;
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\BuildingController;
+use App\Http\Controllers\ProviderController;
+use App\Http\Controllers\CurrencyController;
+use App\Http\Controllers\UnitTypeController;
+use App\Http\Controllers\CondominiumController;
+use App\Http\Controllers\CommonExpenseController;
+use App\Http\Controllers\NoCommonExpenseController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,8 +40,30 @@ Route::put('status/{status}', [StatusController::class, 'update']);
 
 
 
-
+// Column not found: 1054 Unknown column 'currency_id' in 'field list' (SQL: update `no_common_expenses` set `status_id` = 1, 
+// `condominium_id` = 1, `provider_id` = 6, `currency_id` = 1, `unit_id` = 1, `no_common_expenses`.`updated_at` = 2023-08-02 16:24:30 where `id` = 5)
 Route::middleware('auth:sanctum')->group(function () {
+
+    // Obtener unidades por condominio
+    Route::get('condominium/{condominium}/units', [CondominiumController::class, 'get_units_by_condominium']);
+
+    // Crear gasto no comun
+    Route::post('uncommon_expense', [NoCommonExpenseController::class, 'create']);
+
+    // Obtener gastos no comunes por condominio 
+    Route::get('uncommon_expense/{condominium}', [NoCommonExpenseController::class, 'get_expenses_by_condominium']);
+
+    // Obtener gastos comunes por condominio 
+    Route::get('common_expense/{condominium}', [CommonExpenseController::class, 'get_expenses_by_condominium']);
+
+    // Crear gasto comun
+    Route::post('common_expense', [CommonExpenseController::class, 'create']);
+
+    // Registrar proveedor
+    Route::post('provider', [ProviderController::class, 'create']);
+
+    // Obtener proveedor
+    Route::get('provider', [ProviderController::class, 'index']);
 
     // Crear condominium
     Route::post('condominium', [CondominiumController::class, 'create']);

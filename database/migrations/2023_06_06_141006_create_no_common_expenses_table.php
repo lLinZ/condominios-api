@@ -17,6 +17,9 @@ return new class extends Migration
             $table->id();
             $table->string('description');
             $table->decimal('amount', 11, 2);
+            $table->string('currency_type');
+            $table->unsignedBigInteger('currency_id')->nullable();
+            $table->foreign('currency_id')->references('id')->on('currencies')->onUpdate('cascade')->onDelete('cascade');
             $table->unsignedBigInteger('provider_id')->nullable();
             $table->foreign('provider_id')->references('id')->on('providers')->onUpdate('cascade')->onDelete('cascade');
             $table->unsignedBigInteger('unit_id')->nullable();
