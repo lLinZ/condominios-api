@@ -113,6 +113,7 @@ class CondominiumController extends Controller
                 }
                 $debt->unit()->associate($unit);
                 $debt->status()->associate($status);
+                $debt->condominium()->associate($condominium);
                 $debt->save();
             } catch (\Throwable $th) {
                 $errors[] = $unit->name . ' No se logro crear la deuda';

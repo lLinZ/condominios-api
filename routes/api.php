@@ -13,6 +13,7 @@ use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\UnitTypeController;
 use App\Http\Controllers\CondominiumController;
 use App\Http\Controllers\CommonExpenseController;
+use App\Http\Controllers\DebtController;
 use App\Http\Controllers\NoCommonExpenseController;
 
 /*
@@ -43,6 +44,11 @@ Route::put('status/{status}', [StatusController::class, 'update']);
 // Column not found: 1054 Unknown column 'currency_id' in 'field list' (SQL: update `no_common_expenses` set `status_id` = 1, 
 // `condominium_id` = 1, `provider_id` = 6, `currency_id` = 1, `unit_id` = 1, `no_common_expenses`.`updated_at` = 2023-08-02 16:24:30 where `id` = 5)
 Route::middleware('auth:sanctum')->group(function () {
+
+    Route::get('counter/payments', [PaymentController::class, 'count_pending_payments']);
+
+    // Obtener unidades por condominio
+    Route::get('debts', [DebtController::class, 'get_active_debts_by_client']);
 
     // Obtener unidades por condominio
     Route::get('condominium/{condominium}/units', [CondominiumController::class, 'get_units_by_condominium']);

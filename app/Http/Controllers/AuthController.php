@@ -239,7 +239,7 @@ class AuthController extends Controller
     public function edit_user(Request $request, User $user)
     {
 
-        if ($request->password == $request->confirmarPassword) {
+        if ($request->password != $request->confirmarPassword) {
             return response()->json(['status' => false, 'errors' => 'Las contraseñas no coinciden'], 400);
         }
 
@@ -250,7 +250,7 @@ class AuthController extends Controller
         ]);
 
         if (!$validator->fails()) {
-            return response()->json(['status' => false, 'errors' => $validator->errors()], 400);
+            return response()->json(['status' => false, 'errors' => [$validator->errors(), 'dsadsadsa00']], 400);
         }
 
         $user->email = $request->email;

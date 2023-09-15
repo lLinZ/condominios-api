@@ -15,6 +15,10 @@ class Payment extends Model
     {
         return $this->belongsTo(User::class);
     }
+    public function unit()
+    {
+        return $this->belongsTo(Unit::class);
+    }
     public function status()
     {
         return $this->belongsTo(Status::class);
@@ -29,6 +33,7 @@ class Payment extends Model
         'currency',
         'payment_type',
         'amount',
+        'calculable_amount',
         'image',
         'description',
     ];

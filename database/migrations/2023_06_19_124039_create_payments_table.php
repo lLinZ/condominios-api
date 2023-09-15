@@ -23,10 +23,10 @@ return new class extends Migration
             $table->string('image')->nullable();
             $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
+            $table->unsignedBigInteger('unit_id')->nullable();
+            $table->foreign('unit_id')->references('id')->on('units')->onUpdate('cascade')->onDelete('cascade');
             $table->unsignedBigInteger('status_id')->nullable();
             $table->foreign('status_id')->references('id')->on('statuses')->onUpdate('cascade')->onDelete('cascade');
-            $table->unsignedBigInteger('condominium_id')->nullable();
-            $table->foreign('condominium_id')->references('id')->on('condominia')->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
         });
     }
