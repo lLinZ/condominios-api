@@ -141,7 +141,11 @@ class PaymentController extends Controller
                 'description.max' => 'La descripcion debe ser maximo 255 caracteres'
             ]
         );
-
+        // A001246
+        // A001081
+        // A002382
+        // A001615
+        // A001232
         if ($validator->fails()) {
             return response()->json(['status' => false, 'message' => 'Error de validacion', 'errors' => $validator->errors()], 400);
         }
